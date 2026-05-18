@@ -1,0 +1,333 @@
+/* ============================================
+   TODO管理系统 - 轻奢毛玻璃风格（高透明版）
+   ============================================ */
+
+:root {
+    --color-primary: #3B82F6;
+    --color-primary-hover: #2563EB;
+}
+
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+html {
+    font-size: 16px;
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+}
+
+::-webkit-scrollbar { width: 4px; height: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); border-radius: 10px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.25); }
+
+::selection {
+    background: rgba(59, 130, 246, 0.3);
+    color: #fff;
+}
+
+/* 分层交错淡入动画 */
+@keyframes fadeInHeader {
+    from { opacity: 0; transform: translateY(-12px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeInLeft {
+    from { opacity: 0; transform: translateX(-16px); }
+    to { opacity: 1; transform: translateX(0); }
+}
+@keyframes fadeInMain {
+    from { opacity: 0; transform: scale(0.98); }
+    to { opacity: 1; transform: scale(1); }
+}
+@keyframes fadeInRight {
+    from { opacity: 0; transform: translateX(16px); }
+    to { opacity: 1; transform: translateX(0); }
+}
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+@keyframes pulse-dot {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+}
+
+.anim-header { animation: fadeInHeader 0.6s cubic-bezier(0.22, 1, 0.36, 1) both; }
+.anim-left { animation: fadeInLeft 0.6s cubic-bezier(0.22, 1, 0.36, 1) 0.12s both; }
+.anim-main { animation: fadeInMain 0.7s cubic-bezier(0.22, 1, 0.36, 1) 0.24s both; }
+.anim-right { animation: fadeInRight 0.6s cubic-bezier(0.22, 1, 0.36, 1) 0.36s both; }
+.anim-up { animation: fadeInUp 0.4s cubic-bezier(0.22, 1, 0.36, 1) both; }
+.pulse-dot { animation: pulse-dot 2s ease-in-out infinite; }
+
+/* 毛玻璃核心 - 适度透明，文字清晰 */
+.glass {
+    background: rgba(255, 255, 255, 0.12);
+    backdrop-filter: blur(20px) saturate(160%);
+    -webkit-backdrop-filter: blur(20px) saturate(160%);
+    border: none;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.08);
+}
+
+.glass-card {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(16px) saturate(150%);
+    -webkit-backdrop-filter: blur(16px) saturate(150%);
+    border: none;
+    box-shadow: 0 2px 16px rgba(0, 0, 0, 0.06);
+}
+
+.glass-input {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.glass-input:focus {
+    background: rgba(255, 255, 255, 0.15);
+    border-color: rgba(59, 130, 246, 0.5);
+}
+
+/* 背景图片 */
+.app-bg {
+    background-image: url('https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1920&q=80');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+}
+
+/* 任务卡片 */
+.task-card {
+    transition: all 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+    cursor: pointer;
+}
+.task-card:hover {
+    transform: translateX(2px);
+    background: rgba(255, 255, 255, 0.1);
+}
+
+/* AI助手按钮 */
+@keyframes pulse-ring {
+    0% { transform: scale(0.85); opacity: 1; }
+    100% { transform: scale(1.4); opacity: 0; }
+}
+.ai-btn-pulse { position: relative; }
+.ai-btn-pulse::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #3B82F6, #60A5FA);
+    animation: pulse-ring 2s cubic-bezier(0.22, 1, 0.36, 1) infinite;
+    z-index: -1;
+}
+
+/* 日视图时间段指示 */
+.time-period-header {
+    position: relative;
+    padding-left: 1rem;
+}
+.time-period-header::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 3px;
+    height: 60%;
+    border-radius: 2px;
+}
+.time-morning::before { background: linear-gradient(to bottom, #FCD34D, #F59E0B); }
+.time-afternoon::before { background: linear-gradient(to bottom, #60A5FA, #3B82F6); }
+.time-evening::before { background: linear-gradient(to bottom, #A78BFA, #7C3AED); }
+
+/* 菱形按钮布局 */
+.diamond-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    gap: 6px;
+    width: 120px;
+    height: 120px;
+    position: relative;
+}
+.diamond-grid .diamond-center {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) rotate(45deg);
+    width: 40px;
+    height: 40px;
+    z-index: 2;
+}
+.diamond-grid .diamond-center i {
+    transform: rotate(-45deg);
+}
+.diamond-grid .diamond-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    transition: all 0.2s ease;
+}
+.diamond-grid .diamond-btn:hover {
+    transform: scale(1.05);
+}
+.diamond-grid .diamond-btn i {
+    font-size: 16px;
+}
+
+/* 月历日期格子 - 拉长 */
+.month-cell {
+    min-height: 130px;
+    transition: all 0.2s ease;
+}
+.month-cell:hover {
+    background: rgba(255, 255, 255, 0.12);
+}
+
+/* 深夜时间段指示 */
+.time-latenight::before { background: linear-gradient(to bottom, #818CF8, #4F46E5); }
+
+/* 左侧任务列表滚动优化 */
+#selectedDateTasks {
+    max-height: calc(100vh - 380px);
+    overflow-y: auto;
+}
+
+/* 滚动条美化 */
+#selectedDateTasks::-webkit-scrollbar {
+    width: 4px;
+}
+#selectedDateTasks::-webkit-scrollbar-track {
+    background: transparent;
+}
+#selectedDateTasks::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 4px;
+}
+#selectedDateTasks::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.35);
+}
+
+/* 模态框 */
+.modal-overlay {
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(4px);
+}
+
+/* 统一关闭按钮 - 圆形24x24，绝对定位右上角 */
+.modal-close-btn {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    z-index: 10;
+    padding: 0;
+    outline: none;
+    text-decoration: none;
+}
+.modal-close-btn i {
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.8);
+    line-height: 1;
+}
+.modal-close-btn:hover {
+    background: rgba(255, 255, 255, 0.25);
+    transform: scale(1.05);
+}
+.modal-close-btn:hover i {
+    color: #fff;
+}
+.modal-close-btn:active {
+    transform: scale(0.95);
+}
+
+/* 弹窗按钮 - 取消 */
+.modal-btn-cancel {
+    padding: 10px 16px;
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.8);
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+.modal-btn-cancel:hover {
+    background: rgba(255, 255, 255, 0.18);
+}
+
+/* 弹窗按钮 - 保存 */
+.modal-btn-save {
+    padding: 10px 16px;
+    font-size: 13px;
+    color: #fff;
+    background: #3B82F6;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+.modal-btn-save:hover {
+    background: #2563EB;
+}
+
+/* AI快捷按钮 */
+.ai-quick-btn {
+    padding: 6px 12px;
+    font-size: 12px;
+    color: #555;
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+.ai-quick-btn:hover {
+    background: #f3f4f6;
+}
+.ai-quick-btn-primary {
+    color: #2563EB;
+    border-color: #bfdbfe;
+    background: #eff6ff;
+}
+.ai-quick-btn-primary:hover {
+    background: #dbeafe;
+}
+
+/* 日历和主内容文字阴影 - 确保在任何背景下清晰可读 */
+#monthView, #dayView, .glass, .glass-card {
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5), 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+#monthView .text-white, #dayView .text-white {
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6), 0 1px 2px rgba(0, 0, 0, 0.4);
+}
+.glass-input, .glass-input * {
+    text-shadow: none;
+}
+
+/* 响应式 */
+@media (max-width: 768px) {
+    aside { display: none !important; }
+    main { width: 100% !important; }
+}
+
+/* 打印 */
+@media print {
+    .glass, .glass-card { background: white !important; backdrop-filter: none !important; }
+    .app-bg { background-image: none !important; }
+    .ai-btn-pulse, #aiChatWindow { display: none !important; }
+}
